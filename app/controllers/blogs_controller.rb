@@ -3,7 +3,7 @@
 class BlogsController < ApplicationController
   skip_before_action :authenticate_user!, only: %i[index show]
 
-  before_action :set_blog, only: %i[show edit update destroy]
+  before_action :set_blog, only: %i[show]
   before_action :can_edit_blog, only: %i[edit update destroy]
 
   def index
@@ -60,8 +60,6 @@ class BlogsController < ApplicationController
   end
 
   def can_edit_blog
-    return if @blog.user.id == current_user.id
-
-    raise ActiveRecord::RecordNotFound
+    @blog = current_user.blogs.find(params[:id])
   end
 end
