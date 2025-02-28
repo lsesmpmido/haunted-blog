@@ -11,10 +11,7 @@ class BlogsController < ApplicationController
   end
 
   def show
-    return unless @blog.secret?
-    return if user_signed_in? && @blog.user.id == current_user.id
-
-    raise ActiveRecord::RecordNotFound
+    @blog = Blog.published.or(Blog.where(user: current_user)).find(params[:id])
   end
 
   def new
